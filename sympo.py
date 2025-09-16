@@ -1,22 +1,3 @@
-# streamlit_symposium_code_editor.py
-# -------------------------------------------------------------
-# Streamlit-based coding challenge app for symposium model-building event
-# Features
-# - Login/registration page: collects team details (team name, lead email, phone, college)
-#   Left panel shows event logo; right panel has form.
-#   Details are saved on the HOST machine (where Streamlit app runs) in event_data/teams.csv
-#   The team name is shown to the user after login throughout the app.
-# - Problem menu: shows 6 problem statements. Teams are issued a problem code (PS1..PS6).
-#   They must enter the correct code to open the corresponding problem.
-# - Each problem shows: a question + starter (half-built) code in an editor (text area).
-#   Participants must fill only the TODO parts. New imports / dangerous code are blocked.
-# - Run button: executes the user code in a restricted sandbox and runs hidden tests.
-#   Shows "✅ All tests passed" or descriptive errors.
-# - Submit button: enabled only after tests pass; allowed ONCE per team per problem.
-#   Saves the submitted code + team name + timestamp on HOST machine under event_data/submissions.
-# - Admin page (optional): view registrations and submissions (requires admin password).
-# -------------------------------------------------------------
-
 import os
 import io
 import ast
@@ -653,25 +634,3 @@ elif page == "Problems":
     else:
         st.info("Enter a valid problem code (PS1..PS5) and click 'Open Problem'.")
 
-# -------------- Organizer Notes --------------
-# How to run:
-#   1) Install dependencies on HOST machine: pip install streamlit scikit-learn numpy pandas
-#   2) Put your logo file under assets/logo.png (or change LOGO_PATH)
-#   3) Run the app: streamlit run streamlit_symposium_code_editor.py
-#   4) All saved data lives in ./event_data on the HOST machine.
-#      If multiple client machines open the app via network, their actions are stored centrally.
-#
-# How to customize problems:
-#   - Edit the PROBLEMS dict above. For each entry, update 'starter' code and the validator function.
-#   - Keep function names consistent between starter code and validator expectations.
-#   - For dataset/model based problems, load your dataset at the top of the starter code and test it in the validator.
-#   - You can tighten/loosen thresholds in validators (e.g., accuracy >= X).
-#   - To forbid additional modules, edit ALLOWED_IMPORTS. The sanitizer blocks unknown imports and dangerous calls.
-#
-# Security notes:
-#   - This uses Python's exec with a restricted builtins set and a basic AST sanitizer.
-#   - It is NOT a perfect sandbox. For public/hosted events, consider containerization or separate worker processes.
-#
-# Submission policy:
-#   - The app enforces one submission per team per problem by checking event_data/submissions.csv.
-#   - Admin can review in the Admin page (password from EVENT_ADMIN_PASSWORD env var or default shown above).
